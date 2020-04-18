@@ -8,8 +8,6 @@ public abstract class Entity {
 
     private static final Shader SHADER = Shader.getInstance();
 
-    // TODO: replace ALL float usages with doubles
-
     public final DoubleProperty mX;
     public final DoubleProperty mY;
     public final DoubleProperty mWidth;

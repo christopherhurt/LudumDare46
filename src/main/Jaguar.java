@@ -4,12 +4,21 @@ import util.Entity;
 import util.EntityManager;
 import util.IEntityData;
 import util.MathUtils;
+import util.Texture;
+import util.TextureAtlas;
 import util.Time;
 
 class Jaguar extends Entity {
 
     static final double WIDTH = 0.25;
     static final double HEIGHT = 0.125;
+
+    private static final Texture TEXTURE;
+    static {
+        TextureAtlas atlas = new TextureAtlas("res/jaguar.png");
+        double textureHeight = HEIGHT / WIDTH;
+        TEXTURE = new Texture(atlas, 0.0, 0.5 - textureHeight / 2.0, 1.0, textureHeight);
+    }
 
     private static final double SPEED = 0.25;
     private static final double DAMAGE_RADIUS = 0.1;
@@ -25,7 +34,7 @@ class Jaguar extends Entity {
 
     private static IEntityData buildJaguar(double pX, double pY) {
         return Entity.newDataBuilder(pX, pY, WIDTH, HEIGHT)
-                    .withColor(1.0, 1.0, 0.0)
+                    .withTexture(TEXTURE)
                     .withTag(Tag.JAGUAR.getTag())
                     .build();
     }
@@ -36,7 +45,7 @@ class Jaguar extends Entity {
         double dirX = mHunter.mX.get() - mX.get();
         double dirY = mHunter.mY.get() - mY.get();
 
-        // TODO: update theta
+        mTheta.set(Math.toDegrees(Math.atan2(dirY, dirX)));
 
         double velX = dirX / dirSize * SPEED;
         double velY = dirY / dirSize * SPEED;
