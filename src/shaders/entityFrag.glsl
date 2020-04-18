@@ -9,12 +9,17 @@ uniform sampler2D uTexture;
 uniform vec4 uTexCoordInfo;
 
 uniform vec3 uColor;
+uniform float uOpacity;
 
 void main() {
+    vec3 outColor;
+
     if (uHasTexture > 0) {
         vec2 textureCoord = iPassTexCoords * uTexCoordInfo.zw + uTexCoordInfo.xy;
-        oFragColor = texture(uTexture, textureCoord);
+        outColor = texture(uTexture, textureCoord).rgb;
     } else {
-        oFragColor = vec4(uColor, 1.0);
+        outColor = uColor;
     }
+
+    oFragColor = vec4(outColor, uOpacity);
 }

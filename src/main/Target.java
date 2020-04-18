@@ -11,6 +11,7 @@ class Target extends Entity {
     private static final double SIZE = 0.1;
     private static final double LIFESPAN = 0.5;
     private static final double EXPLOSION_RADIUS = 0.075;
+    private static final double INITIAL_OPACITY = 0.5;
 
     private double mLife = LIFESPAN;
 
@@ -21,12 +22,15 @@ class Target extends Entity {
     private static IEntityData buildTarget(double pX, double pY) {
         return Entity.newDataBuilder(pX, pY, SIZE, SIZE)
                     .withColor(1.0, 0.0, 1.0)
+                    .withOpacity(INITIAL_OPACITY)
                     .build();
     }
 
     @Override
     public void update() {
         mLife -= Time.getInstance().getDelta();
+
+        setOpacity(INITIAL_OPACITY + (1.0 - INITIAL_OPACITY) * (1.0 - mLife / LIFESPAN));
 
         if (mLife <= 0.0) {
             // Kill any nearby jaguars

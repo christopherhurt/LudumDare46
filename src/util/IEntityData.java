@@ -12,6 +12,7 @@ public interface IEntityData {
     Optional<Double> getColorR();
     Optional<Double> getColorG();
     Optional<Double> getColorB();
+    double getOpacity();
     double getTheta();
     Optional<String> getTag();
 

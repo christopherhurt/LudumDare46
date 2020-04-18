@@ -18,6 +18,7 @@ public abstract class Entity {
     private double mColorR = 0.0;
     private double mColorG = 0.0;
     private double mColorB = 0.0;
+    private double mOpacity;
 
     private final String mTag;
 
@@ -34,6 +35,7 @@ public abstract class Entity {
         if (pData.getColorR().isPresent() && pData.getColorG().isPresent() && pData.getColorB().isPresent()) {
             setColor(pData.getColorR().get(), pData.getColorG().get(), pData.getColorB().get());
         }
+        mOpacity = pData.getOpacity();
     }
 
     protected abstract void update();
@@ -50,6 +52,10 @@ public abstract class Entity {
         mColorR = pColorR;
         mColorG = pColorG;
         mColorB = pColorB;
+    }
+
+    public void setOpacity(double pOpacity) {
+        mOpacity = pOpacity;
     }
 
     void prepareAndRender() {
@@ -69,8 +75,10 @@ public abstract class Entity {
             if (hasTexture) {
                 mTexture.load(0);
             } else {
-                SHADER.loadColor((float) mColorR, (float) mColorG, (float) mColorB);
+                SHADER.loadColor((float)mColorR, (float)mColorG, (float)mColorB);
             }
+
+            SHADER.loadOpacity((float)mOpacity);
 
             GL11.glDrawElements(GL11.GL_TRIANGLES, QuadMesh.INDEX_COUNT, GL11.GL_UNSIGNED_INT, 0);
         }
@@ -104,6 +112,7 @@ public abstract class Entity {
     public interface BuildStep {
         BuildStep withTheta(double pTheta);
         BuildStep withTag(String pTag);
+        BuildStep withOpacity(double pOpacity);
         IEntityData build();
     }
 
@@ -125,6 +134,7 @@ public abstract class Entity {
 
         private double mTheta = 0.0;
         private String mTag = null;
+        private double mOpacity = 1.0;
 
         Builder(double pX, double pY, double pWidth, double pHeight) {
             mX = pX;
@@ -156,6 +166,12 @@ public abstract class Entity {
         @Override
         public BuildStep withTag(String pTag) {
             mTag = pTag;
+            return this;
+        }
+
+        @Override
+        public BuildStep withOpacity(double pOpacity) {
+            mOpacity = pOpacity;
             return this;
         }
 
@@ -202,6 +218,11 @@ public abstract class Entity {
         @Override
         public Optional<Double> getColorB() {
             return Optional.ofNullable(mColorB);
+        }
+
+        @Override
+        public double getOpacity() {
+            return mOpacity;
         }
 
         @Override

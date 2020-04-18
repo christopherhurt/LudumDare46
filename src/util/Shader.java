@@ -81,4 +81,8 @@ final class Shader {
         GL20.glUniform3f(GL20.glGetUniformLocation(mProgram, "uColor"), pRed, pGreen, pBlue);
     }
 
+    void loadOpacity(float pOpacity) {
+        GL20.glUniform1f(GL20.glGetUniformLocation(mProgram, "uOpacity"), pOpacity);
+    }
+
 }
