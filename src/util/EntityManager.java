@@ -1,6 +1,6 @@
 package util;
 
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.ArrayList;
 import main.SceneSetup;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public final class EntityManager {
         QuadMesh.bind();
     }
 
-    private final List<Entity> mEntities = new CopyOnWriteArrayList<>();
+    private final List<Entity> mEntities = new ArrayList<>();
 
     private EntityManager() {
     }
@@ -42,7 +42,7 @@ public final class EntityManager {
     }
 
     void updateAll() {
-        mEntities.forEach(Entity::update);
+        new ArrayList<>(mEntities).forEach(Entity::update);
     }
 
     void renderAll() {

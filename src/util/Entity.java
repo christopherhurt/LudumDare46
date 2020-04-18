@@ -8,13 +8,15 @@ public abstract class Entity {
 
     private static final Shader SHADER = Shader.getInstance();
 
+    // TODO: replace ALL float usages with doubles
+
     public final FloatProperty mX;
     public final FloatProperty mY;
     public final FloatProperty mWidth;
     public final FloatProperty mHeight;
     public final FloatProperty mTheta;
 
-    private final Texture mTexture;
+    private Texture mTexture;
     private final float[] mColor = new float[3];
 
     private final String mTag;
@@ -30,9 +32,7 @@ public abstract class Entity {
         mTag = pData.getTag().orElse(null);
         mTexture = pData.getTexture().orElse(null);
         if (pData.getColorR().isPresent() && pData.getColorG().isPresent() && pData.getColorB().isPresent()) {
-            mColor[0] = pData.getColorR().get();
-            mColor[1] = pData.getColorG().get();
-            mColor[2] = pData.getColorB().get();
+            setColor(pData.getColorR().get(), pData.getColorG().get(), pData.getColorB().get());
         }
     }
 
@@ -40,6 +40,16 @@ public abstract class Entity {
 
     public Optional<String> getTag() {
         return Optional.ofNullable(mTag);
+    }
+
+    public void setTexture(Texture pTexture) {
+        mTexture = pTexture;
+    }
+
+    public void setColor(float pColorR, float pColorG, float pColorB) {
+        mColor[0] = pColorR;
+        mColor[1] = pColorG;
+        mColor[2] = pColorB;
     }
 
     void prepareAndRender() {
