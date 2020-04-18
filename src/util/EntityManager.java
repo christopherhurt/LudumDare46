@@ -1,9 +1,8 @@
 package util;
 
+import java.util.concurrent.CopyOnWriteArrayList;
 import main.SceneSetup;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public final class EntityManager {
@@ -20,7 +19,7 @@ public final class EntityManager {
         QuadMesh.bind();
     }
 
-    private final List<Entity> mEntities = new ArrayList<>();
+    private final List<Entity> mEntities = new CopyOnWriteArrayList<>();
 
     private EntityManager() {
     }
@@ -33,8 +32,8 @@ public final class EntityManager {
         mEntities.remove(pEntity);
     }
 
-    public List<Entity> getEntitiesUnmodifiable() {
-        return Collections.unmodifiableList(mEntities);
+    public List<Entity> getEntities() {
+        return mEntities;
     }
 
     void reset() {

@@ -8,11 +8,11 @@ public abstract class Entity {
 
     private static final Shader SHADER = Shader.getInstance();
 
-    protected final FloatProperty mX;
-    protected final FloatProperty mY;
-    protected final FloatProperty mWidth;
-    protected final FloatProperty mHeight;
-    protected final FloatProperty mTheta;
+    public final FloatProperty mX;
+    public final FloatProperty mY;
+    public final FloatProperty mWidth;
+    public final FloatProperty mHeight;
+    public final FloatProperty mTheta;
 
     private final Texture mTexture;
     private final float[] mColor = new float[3];
