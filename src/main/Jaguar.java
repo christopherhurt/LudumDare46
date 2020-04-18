@@ -23,13 +23,11 @@ class Jaguar extends Entity {
     private static final double SPEED = 0.25;
     private static final double DAMAGE_RADIUS = 0.1;
 
-    private final Entity mHunter;
-    private final HealthManager mHealthManager;
+    private final Hunter mHunter;
 
-    Jaguar(double pX, double pY, Entity pHunter, HealthManager pHealthManager) {
+    Jaguar(double pX, double pY, Hunter pHunter) {
         super(buildJaguar(pX, pY));
         mHunter = pHunter;
-        mHealthManager = pHealthManager;
     }
 
     private static IEntityData buildJaguar(double pX, double pY) {
@@ -53,8 +51,8 @@ class Jaguar extends Entity {
         mY.set(mY.get() + velY * Time.getInstance().getDelta());
 
         double newDistance = MathUtils.getDistance(mX.get(), mY.get(), mHunter.mX.get(), mHunter.mY.get());
-        if (newDistance <= DAMAGE_RADIUS && !mHealthManager.isGameOver()) {
-            mHealthManager.inflictDamage();
+        if (newDistance <= DAMAGE_RADIUS && !mHunter.isDead()) {
+            mHunter.inflictDamage();
             EntityManager.getInstance().removeEntity(this);
         }
     }

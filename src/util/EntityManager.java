@@ -21,6 +21,8 @@ public final class EntityManager {
 
     private final List<Entity> mEntities = new ArrayList<>();
 
+    private boolean mResetOnUpdateFinish = false;
+
     private EntityManager() {
     }
 
@@ -36,13 +38,18 @@ public final class EntityManager {
         return mEntities;
     }
 
-    void reset() {
-        mEntities.clear();
-        SceneSetup.setup(this);
+    public void reset() {
+        mResetOnUpdateFinish = true;
     }
 
     void updateAll() {
         new ArrayList<>(mEntities).forEach(Entity::update);
+
+        if (mResetOnUpdateFinish) {
+            mEntities.clear();
+            SceneSetup.setup(this);
+            mResetOnUpdateFinish = false;
+        }
     }
 
     void renderAll() {

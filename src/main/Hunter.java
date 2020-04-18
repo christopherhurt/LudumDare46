@@ -24,18 +24,23 @@ class Hunter extends Entity {
 
     @Override
     public void update() {
-        if (mHealthManager.isGameOver()) {
-            die();
-        } else {
+        if (!isDead()) {
             // TODO: move around, shoot jaguars
         }
     }
 
-    private void die() {
-        if (!mIsDead) {
-            setColor(1.0, 1.0, 1.0);
-            mIsDead = true;
+    void inflictDamage() {
+        if (!isDead()) {
+            mHealthManager.inflictDamage();
+
+            if (isDead()) {
+                setColor(1.0, 1.0, 1.0);
+            }
         }
+    }
+
+    boolean isDead() {
+        return mHealthManager.isGameOver();
     }
 
 }

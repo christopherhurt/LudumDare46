@@ -8,10 +8,12 @@ public final class SceneSetup {
         HealthManager healthManager = new HealthManager();
         pEntityManager.addEntity(healthManager);
 
+        pEntityManager.addEntity(new ResetController(healthManager));
+
         pEntityManager.addEntity(new TargetManager(healthManager));
 
         Hunter hunter = new Hunter(healthManager);
-        pEntityManager.addEntity(new JaguarManager(hunter, healthManager));
+        pEntityManager.addEntity(new JaguarManager(hunter));
         pEntityManager.addEntity(hunter);
     }
 

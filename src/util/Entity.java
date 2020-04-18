@@ -53,25 +53,27 @@ public abstract class Entity {
     }
 
     void prepareAndRender() {
-        if (mX.isDirty() || mY.isDirty() || mWidth.isDirty() || mHeight.isDirty() || mTheta.isDirty()) {
-            buildTransformation();
-            mX.markClean();
-            mY.markClean();
-            mWidth.markClean();
-            mHeight.markClean();
-            mTheta.markClean();
-        }
-        SHADER.loadTransformation(mTransformation);
+        if (mWidth.get() > 0.0 && mHeight.get() > 0.0) {
+            if (mX.isDirty() || mY.isDirty() || mWidth.isDirty() || mHeight.isDirty() || mTheta.isDirty()) {
+                buildTransformation();
+                mX.markClean();
+                mY.markClean();
+                mWidth.markClean();
+                mHeight.markClean();
+                mTheta.markClean();
+            }
+            SHADER.loadTransformation(mTransformation);
 
-        boolean hasTexture = mTexture != null;
-        SHADER.loadHasTexture(hasTexture);
-        if (hasTexture) {
-            mTexture.load(0);
-        } else {
-            SHADER.loadColor((float)mColorR, (float)mColorG, (float)mColorB);
-        }
+            boolean hasTexture = mTexture != null;
+            SHADER.loadHasTexture(hasTexture);
+            if (hasTexture) {
+                mTexture.load(0);
+            } else {
+                SHADER.loadColor((float) mColorR, (float) mColorG, (float) mColorB);
+            }
 
-        GL11.glDrawElements(GL11.GL_TRIANGLES, QuadMesh.INDEX_COUNT, GL11.GL_UNSIGNED_INT, 0);
+            GL11.glDrawElements(GL11.GL_TRIANGLES, QuadMesh.INDEX_COUNT, GL11.GL_UNSIGNED_INT, 0);
+        }
     }
 
     private void buildTransformation() {

@@ -11,18 +11,17 @@ class JaguarManager extends Entity {
     private static final double INITIAL_SPAWN_INTERVAL = 3.0;
     private static final double SPAWN_INTERVAL_MULTIPLIER = 0.9;
     private static final double SPAWN_INTERVAL_DECREASE_INTERVAL = 20.0;
+    private static final double SPAWN_OFFSET = 0.1f;
 
-    private final Entity mHunter;
-    private final HealthManager mHealthManager;
+    private final Hunter mHunter;
 
     private double mCurrentSpawnInterval = INITIAL_SPAWN_INTERVAL;
     private double mSpawnIntervalTimer = INITIAL_SPAWN_INTERVAL;
     private double mIntervalDecreaseTimer = SPAWN_INTERVAL_DECREASE_INTERVAL;
 
-    JaguarManager(Entity pHunter, HealthManager pHealthManager) {
+    JaguarManager(Hunter pHunter) {
         super(buildJaguarManager());
         mHunter = pHunter;
-        mHealthManager = pHealthManager;
     }
 
     private static IEntityData buildJaguarManager() {
@@ -50,33 +49,32 @@ class JaguarManager extends Entity {
         double spawnX;
         double spawnY;
 
+        double positionRange = 2.0 + Jaguar.WIDTH;
+        double randomBoundary = Math.random() * positionRange - positionRange / 2.0;
+        double fixedBoundary = 1.0 + Jaguar.HEIGHT / 2.0 + SPAWN_OFFSET;
+
         int side = (int)(Math.random() * 4.0);
         if (side == 0) {
             // Left
-            spawnX = -(1.0 + Jaguar.WIDTH / 2.0);
-            spawnY = randomPosition(Jaguar.HEIGHT);
+            spawnX = -fixedBoundary;
+            spawnY = randomBoundary;
         } else if (side == 1) {
             // Top
-            spawnX = randomPosition(Jaguar.WIDTH);
-            spawnY = 1.0 + Jaguar.HEIGHT / 2.0;
+            spawnX = randomBoundary;
+            spawnY = fixedBoundary;
         } else if (side == 2) {
             // Right
-            spawnX = 1.0 + Jaguar.WIDTH / 2.0;
-            spawnY = randomPosition(Jaguar.HEIGHT);
+            spawnX = fixedBoundary;
+            spawnY = randomBoundary;
         } else if (side == 3) {
             // Bottom
-            spawnX = randomPosition(Jaguar.WIDTH);
-            spawnY = -(1.0 + Jaguar.HEIGHT / 2.0);
+            spawnX = randomBoundary;
+            spawnY = -fixedBoundary;
         } else {
             throw new InvalidStateException("Invalid jaguar spawn side " + side);
         }
 
-        EntityManager.getInstance().addEntity(new Jaguar(spawnX, spawnY, mHunter, mHealthManager));
-    }
-
-    private double randomPosition(double pDimension) {
-        double positionRange = 2.0 + pDimension;
-        return Math.random() * positionRange - positionRange / 2.0;
+        EntityManager.getInstance().addEntity(new Jaguar(spawnX, spawnY, mHunter));
     }
 
 }
