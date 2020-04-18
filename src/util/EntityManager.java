@@ -1,5 +1,7 @@
 package util;
 
+import main.SceneSetup;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -10,7 +12,7 @@ public final class EntityManager {
         static final EntityManager INSTANCE = new EntityManager();
     }
 
-    static EntityManager getInstance() {
+    public static EntityManager getInstance() {
         return InstanceHolder.INSTANCE;
     }
 
@@ -33,6 +35,11 @@ public final class EntityManager {
 
     public List<Entity> getEntitiesUnmodifiable() {
         return Collections.unmodifiableList(mEntities);
+    }
+
+    void reset() {
+        mEntities.clear();
+        SceneSetup.setup(this);
     }
 
     void updateAll() {

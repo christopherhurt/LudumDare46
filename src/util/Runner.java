@@ -29,30 +29,7 @@ public final class Runner {
         GL11.glViewport(0, 0, WINDOW_SIZE, WINDOW_SIZE);
         GL11.glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
 
-        // TODO: remove
-        EntityManager.getInstance().addEntity(new Entity(0.5f, 0.5f, 0.5f, 0.5f) {
-            @Override
-            protected void update() {
-                if (Input.getInstance().isKeyPressed(GLFW.GLFW_KEY_SPACE)) {
-                    System.out.println("SPACE PRESSED");
-                }
-                if (Input.getInstance().isKeyReleased(GLFW.GLFW_KEY_SPACE)) {
-                    System.out.println("SPACE RELEASED");
-                }
-                if (Input.getInstance().isButtonDown(GLFW.GLFW_MOUSE_BUTTON_RIGHT)) {
-                    System.out.println("RIGHT MOUSE DOWN");
-                }
-                if (Input.getInstance().isKeyDown(GLFW.GLFW_KEY_LEFT)) {
-                    mX.set(mX.get() - 0.25f * Time.getInstance().getDelta());
-                }
-                if (Input.getInstance().isKeyDown(GLFW.GLFW_KEY_W)) {
-                    mTheta.set(mTheta.get() + 90.0f * Time.getInstance().getDelta());
-                }
-                if (Input.getInstance().isKeyDown(GLFW.GLFW_KEY_S)) {
-                    mTheta.set(mTheta.get() - 90.0f * Time.getInstance().getDelta());
-                }
-            }
-        });
+        EntityManager.getInstance().reset();
 
         while (!GLFW.glfwWindowShouldClose(window)) {
             Time.getInstance().markFrame();

@@ -1,6 +1,7 @@
 package util;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 
 import java.util.Objects;
 
@@ -17,9 +18,10 @@ public class Texture {
         mCoordinates[3] = pHeight;
     }
 
-    void load() {
+    void load(int pUnit) {
+        GL13.glActiveTexture(pUnit);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, mAtlas.getTexture());
-        Shader.getInstance().loadTexture(mAtlas.getTexture(), mCoordinates);
+        Shader.getInstance().loadTexture(pUnit, mCoordinates);
     }
 
 }

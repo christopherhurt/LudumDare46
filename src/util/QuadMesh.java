@@ -20,6 +20,12 @@ final class QuadMesh {
              0.5f,  0.5f,
              0.5f, -0.5f,
     };
+    private static final float[] QUAD_TEX_COORDS = new float[] {
+            0.0f, 0.0f,
+            0.0f, 1.0f,
+            1.0f, 1.0f,
+            1.0f, 0.0f,
+    };
 
     static final int INDEX_COUNT = QUAD_INDICES.length;
 
@@ -30,6 +36,7 @@ final class QuadMesh {
         GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, QUAD_INDICES, GL15.GL_STATIC_DRAW);
 
         createVbo(QUAD_POS, 0, 2);
+        createVbo(QUAD_TEX_COORDS, 1, 2);
     }
 
     private static void createVbo(float[] pValues, int pAttribute, int pSize) {

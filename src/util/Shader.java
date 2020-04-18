@@ -73,4 +73,12 @@ final class Shader {
         GL20.glUniform4fv(GL20.glGetUniformLocation(mProgram, "uTexCoordInfo"), pVals);
     }
 
+    void loadHasTexture(boolean pHasTexture) {
+        GL20.glUniform1i(GL20.glGetUniformLocation(mProgram, "uHasTexture"), pHasTexture ? 1 : 0);
+    }
+
+    void loadColor(float[] pVals) {
+        GL20.glUniform3fv(GL20.glGetUniformLocation(mProgram, "uColor"), pVals);
+    }
+
 }
