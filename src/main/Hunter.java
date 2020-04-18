@@ -5,7 +5,7 @@ import util.IEntityData;
 
 class Hunter extends Entity {
 
-    private static final float SIZE = 0.1f;
+    private static final double SIZE = 0.1;
 
     private final HealthManager mHealthManager;
 
@@ -17,8 +17,8 @@ class Hunter extends Entity {
     }
 
     private static IEntityData buildHunter() {
-        return Entity.newDataBuilder(0.0f, 0.0f, SIZE, SIZE)
-                    .withColor(0.0f, 0.0f, 0.0f)
+        return Entity.newDataBuilder(0.0, 0.0, SIZE, SIZE)
+                    .withColor(0.0, 0.0, 0.0)
                     .build();
     }
 
@@ -33,7 +33,7 @@ class Hunter extends Entity {
 
     private void die() {
         if (!mIsDead) {
-            setColor(1.0f, 1.0f, 1.0f);
+            setColor(1.0, 1.0, 1.0);
             mIsDead = true;
         }
     }

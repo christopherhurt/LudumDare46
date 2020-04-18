@@ -4,15 +4,15 @@ import java.util.Optional;
 
 public interface IEntityData {
 
-    float getX();
-    float getY();
-    float getWidth();
-    float getHeight();
+    double getX();
+    double getY();
+    double getWidth();
+    double getHeight();
     Optional<Texture> getTexture();
-    Optional<Float> getColorR();
-    Optional<Float> getColorG();
-    Optional<Float> getColorB();
-    float getTheta();
+    Optional<Double> getColorR();
+    Optional<Double> getColorG();
+    Optional<Double> getColorB();
+    double getTheta();
     Optional<String> getTag();
 
 }

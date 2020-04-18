@@ -8,19 +8,19 @@ import util.MathUtils;
 
 class Target extends Entity {
 
-    private static final float SIZE = 0.1f;
-    private static final float LIFESPAN = 0.5f;
-    private static final float EXPLOSION_RADIUS = 0.075f;
+    private static final double SIZE = 0.1;
+    private static final double LIFESPAN = 0.5;
+    private static final double EXPLOSION_RADIUS = 0.075;
 
-    private float mLife = LIFESPAN;
+    private double mLife = LIFESPAN;
 
-    Target(float pX, float pY) {
+    Target(double pX, double pY) {
         super(buildTarget(pX, pY));
     }
 
-    private static IEntityData buildTarget(float pX, float pY) {
+    private static IEntityData buildTarget(double pX, double pY) {
         return Entity.newDataBuilder(pX, pY, SIZE, SIZE)
-                    .withColor(1.0f, 0.0f, 1.0f)
+                    .withColor(1.0, 0.0, 1.0)
                     .build();
     }
 
@@ -28,7 +28,7 @@ class Target extends Entity {
     public void update() {
         mLife -= Time.getInstance().getDelta();
 
-        if (mLife <= 0.0f) {
+        if (mLife <= 0.0) {
             // Kill any nearby jaguars
             EntityManager.getInstance().getEntities().removeIf(pEntity ->
                     pEntity.getTag().filter(pTag -> pTag.equals(Tag.JAGUAR.getTag())).isPresent()

@@ -10,13 +10,13 @@ class HealthManager extends Entity {
 
     private static final int INITIAL_LIVES = 3;
 
-    private static final float HEART_SIZE = 0.04f;
-    private static final float HEART_SPACING = 0.02f;
-    private static final float HEART_Y = 1.0f - HEART_SIZE / 2.0f - HEART_SPACING;
+    private static final double HEART_SIZE = 0.04;
+    private static final double HEART_SPACING = 0.02;
+    private static final double HEART_Y = 1.0 - HEART_SIZE / 2.0 - HEART_SPACING;
 
-    private static final float GAME_OVER_OVERLAY_Y = 0.75f;
-    private static final float GAME_OVER_OVERLAY_WIDTH = 1.0f;
-    private static final float GAME_OVER_OVERLAY_HEIGHT = 0.25f;
+    private static final double GAME_OVER_OVERLAY_Y = 0.75;
+    private static final double GAME_OVER_OVERLAY_WIDTH = 1.0;
+    private static final double GAME_OVER_OVERLAY_HEIGHT = 0.25;
 
     private final List<Entity> mHearts = new ArrayList<>(INITIAL_LIVES);
 
@@ -26,20 +26,20 @@ class HealthManager extends Entity {
         super(buildHealthManager());
 
         for (int i = 0; i < INITIAL_LIVES; i++) {
-            float heartX = -1.0f + HEART_SIZE / 2.0f + (i + 1) * HEART_SPACING + i * HEART_SIZE;
+            double heartX = -1.0 + HEART_SIZE / 2.0 + (i + 1) * HEART_SPACING + i * HEART_SIZE;
             mHearts.add(constructHeart(heartX));
         }
     }
 
     private static IEntityData buildHealthManager() {
-        return Entity.newDataBuilder(0.0f, 0.0f, 0.0f, 0.0f)
-                    .withColor(0.0f, 0.0f, 0.0f)
+        return Entity.newDataBuilder(0.0, 0.0, 0.0, 0.0)
+                    .withColor(0.0, 0.0, 0.0)
                     .build();
     }
 
-    private static Entity constructHeart(float pX) {
+    private static Entity constructHeart(double pX) {
         IEntityData heartData = Entity.newDataBuilder(pX, HEART_Y, HEART_SIZE, HEART_SIZE)
-                                    .withColor(1.0f, 0.0f, 0.0f)
+                                    .withColor(1.0, 0.0, 0.0)
                                     .build();
         return new Entity(heartData) {
             @Override
@@ -79,8 +79,8 @@ class HealthManager extends Entity {
     private void gameOver() {
         if (isGameOver()) {
             IEntityData gameOverOverlayData =
-                    Entity.newDataBuilder(0.0f, GAME_OVER_OVERLAY_Y, GAME_OVER_OVERLAY_WIDTH, GAME_OVER_OVERLAY_HEIGHT)
-                            .withColor(0.5f, 0.5f, 0.5f)
+                    Entity.newDataBuilder(0.0, GAME_OVER_OVERLAY_Y, GAME_OVER_OVERLAY_WIDTH, GAME_OVER_OVERLAY_HEIGHT)
+                            .withColor(0.5, 0.5, 0.5)
                             .build();
             mGameOverOverlay = new Entity(gameOverOverlayData) {
                 @Override

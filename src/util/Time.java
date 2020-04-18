@@ -11,15 +11,15 @@ public final class Time {
     }
 
     private long mLastTime = System.nanoTime();
-    private float mDelta = 0.0f;
+    private double mDelta = 0.0;
 
     void markFrame() {
         long thisTime = System.nanoTime();
-        mDelta = (float)((thisTime - mLastTime) / 1000000000.0);
+        mDelta = (thisTime - mLastTime) / 1000000000.0;
         mLastTime = thisTime;
     }
 
-    public float getDelta() {
+    public double getDelta() {
         return mDelta;
     }
 

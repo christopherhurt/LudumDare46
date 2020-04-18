@@ -1,19 +1,19 @@
 package util;
 
-public class FloatProperty {
+public class DoubleProperty {
 
-    private float mValue;
+    private double mValue;
     private boolean mDirty = true;
 
-    FloatProperty(float pValue) {
+    DoubleProperty(double pValue) {
         mValue = pValue;
     }
 
-    public float get() {
+    public double get() {
         return mValue;
     }
 
-    public void set(float pValue) {
+    public void set(double pValue) {
         mValue = pValue;
         mDirty = true;
     }

@@ -9,11 +9,11 @@ import util.Time;
 
 class TargetManager extends Entity {
 
-    private static final float COOLDOWN = 1.0f;
+    private static final double COOLDOWN = 1.0;
 
     private final HealthManager mHealthManager;
 
-    private float mCooldownTimer = 0.0f;
+    private double mCooldownTimer = 0.0;
 
     TargetManager(HealthManager pHealthManager) {
         super(buildTargetManager());
@@ -21,8 +21,8 @@ class TargetManager extends Entity {
     }
 
     private static IEntityData buildTargetManager() {
-        return Entity.newDataBuilder(0.0f, 0.0f, 0.0f, 0.0f)
-                    .withColor(0.0f, 0.0f, 0.0f)
+        return Entity.newDataBuilder(0.0, 0.0, 0.0, 0.0)
+                    .withColor(0.0, 0.0, 0.0)
                     .build();
     }
 
@@ -31,7 +31,7 @@ class TargetManager extends Entity {
         if (!mHealthManager.isGameOver()) {
             mCooldownTimer -= Time.getInstance().getDelta();
 
-            if (Input.getInstance().isButtonPressed(GLFW.GLFW_MOUSE_BUTTON_LEFT) && mCooldownTimer <= 0.0f) {
+            if (Input.getInstance().isButtonPressed(GLFW.GLFW_MOUSE_BUTTON_LEFT) && mCooldownTimer <= 0.0) {
                 // Drop a target
                 EntityManager.getInstance().addEntity(new Target(Input.getInstance().getMouseX(), Input.getInstance().getMouseY()));
                 mCooldownTimer = COOLDOWN;

@@ -2,10 +2,10 @@ package util;
 
 public final class MathUtils {
 
-    public static float getDistance(float pX1, float pY1, float pX2, float pY2) {
-        float dX = pX2 - pX1;
-        float dY = pY2 - pY1;
-        return (float)Math.sqrt(dX * dX + dY * dY);
+    public static double getDistance(double pX1, double pY1, double pX2, double pY2) {
+        double dX = pX2 - pX1;
+        double dY = pY2 - pY1;
+        return Math.sqrt(dX * dX + dY * dY);
     }
 
     private MathUtils() {

@@ -17,8 +17,8 @@ final class Shader {
         return InstanceHolder.INSTANCE;
     }
 
-    private static final String VERTEX_FILE = "src/shaders/vert.glsl";
-    private static final String FRAGMENT_FILE = "src/shaders/frag.glsl";
+    private static final String VERTEX_FILE = "src/shaders/entityVert.glsl";
+    private static final String FRAGMENT_FILE = "src/shaders/entityFrag.glsl";
 
     private int mProgram;
 
@@ -77,8 +77,8 @@ final class Shader {
         GL20.glUniform1i(GL20.glGetUniformLocation(mProgram, "uHasTexture"), pHasTexture ? 1 : 0);
     }
 
-    void loadColor(float[] pVals) {
-        GL20.glUniform3fv(GL20.glGetUniformLocation(mProgram, "uColor"), pVals);
+    void loadColor(float pRed, float pGreen, float pBlue) {
+        GL20.glUniform3f(GL20.glGetUniformLocation(mProgram, "uColor"), pRed, pGreen, pBlue);
     }
 
 }

@@ -25,8 +25,8 @@ public final class Input {
     private final boolean[] mButtonsPressed = new boolean[NUM_BUTTONS];
     private final boolean[] mButtonsReleased = new boolean[NUM_BUTTONS];
 
-    private float mMouseX = 0.0f;
-    private float mMouseY = 0.0f;
+    private double mMouseX = 0.0;
+    private double mMouseY = 0.0;
 
     void poll(long pWindow) {
         GLFW.glfwPollEvents();
@@ -46,8 +46,8 @@ public final class Input {
         }
 
         GLFW.glfwGetCursorPos(pWindow, X_HOLDER, Y_HOLDER);
-        mMouseX = (float)(X_HOLDER[0] / Runner.WINDOW_SIZE * 2.0 - 1.0);
-        mMouseY = (float)(Y_HOLDER[0] / Runner.WINDOW_SIZE * -2.0 + 1.0);
+        mMouseX = X_HOLDER[0] / Runner.WINDOW_SIZE * 2.0 - 1.0;
+        mMouseY = Y_HOLDER[0] / Runner.WINDOW_SIZE * -2.0 + 1.0;
     }
 
     public boolean isKeyDown(int pKey) {
@@ -74,11 +74,11 @@ public final class Input {
         return mButtonsReleased[pButton];
     }
 
-    public float getMouseX() {
+    public double getMouseX() {
         return mMouseX;
     }
 
-    public float getMouseY() {
+    public double getMouseY() {
         return mMouseY;
     }
 

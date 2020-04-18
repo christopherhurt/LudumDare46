@@ -10,25 +10,27 @@ public abstract class Entity {
 
     // TODO: replace ALL float usages with doubles
 
-    public final FloatProperty mX;
-    public final FloatProperty mY;
-    public final FloatProperty mWidth;
-    public final FloatProperty mHeight;
-    public final FloatProperty mTheta;
+    public final DoubleProperty mX;
+    public final DoubleProperty mY;
+    public final DoubleProperty mWidth;
+    public final DoubleProperty mHeight;
+    public final DoubleProperty mTheta;
 
     private Texture mTexture;
-    private final float[] mColor = new float[3];
+    private double mColorR = 0.0;
+    private double mColorG = 0.0;
+    private double mColorB = 0.0;
 
     private final String mTag;
 
     private final float[] mTransformation = new float[9];
 
     protected Entity(IEntityData pData) {
-        mX = new FloatProperty(pData.getX());
-        mY = new FloatProperty(pData.getY());
-        mWidth = new FloatProperty(pData.getWidth());
-        mHeight = new FloatProperty(pData.getHeight());
-        mTheta = new FloatProperty(pData.getTheta());
+        mX = new DoubleProperty(pData.getX());
+        mY = new DoubleProperty(pData.getY());
+        mWidth = new DoubleProperty(pData.getWidth());
+        mHeight = new DoubleProperty(pData.getHeight());
+        mTheta = new DoubleProperty(pData.getTheta());
         mTag = pData.getTag().orElse(null);
         mTexture = pData.getTexture().orElse(null);
         if (pData.getColorR().isPresent() && pData.getColorG().isPresent() && pData.getColorB().isPresent()) {
@@ -46,10 +48,10 @@ public abstract class Entity {
         mTexture = pTexture;
     }
 
-    public void setColor(float pColorR, float pColorG, float pColorB) {
-        mColor[0] = pColorR;
-        mColor[1] = pColorG;
-        mColor[2] = pColorB;
+    public void setColor(double pColorR, double pColorG, double pColorB) {
+        mColorR = pColorR;
+        mColorG = pColorG;
+        mColorB = pColorB;
     }
 
     void prepareAndRender() {
@@ -68,7 +70,7 @@ public abstract class Entity {
         if (hasTexture) {
             mTexture.load(0);
         } else {
-            SHADER.loadColor(mColor);
+            SHADER.loadColor((float)mColorR, (float)mColorG, (float)mColorB);
         }
 
         GL11.glDrawElements(GL11.GL_TRIANGLES, QuadMesh.INDEX_COUNT, GL11.GL_UNSIGNED_INT, 0);
@@ -76,31 +78,31 @@ public abstract class Entity {
 
     private void buildTransformation() {
         double radians = Math.toRadians(mTheta.get());
-        float cos = (float)Math.cos(radians);
-        float sin = (float)Math.sin(radians);
+        double cos = Math.cos(radians);
+        double sin = Math.sin(radians);
 
-        mTransformation[0] = mWidth.get() * cos;
-        mTransformation[1] = mWidth.get() * sin;
+        mTransformation[0] = (float)(mWidth.get() * cos);
+        mTransformation[1] = (float)(mWidth.get() * sin);
         mTransformation[2] = 0.0f;
-        mTransformation[3] = mHeight.get() * -sin;
-        mTransformation[4] = mHeight.get() * cos;
+        mTransformation[3] = (float)(mHeight.get() * -sin);
+        mTransformation[4] = (float)(mHeight.get() * cos);
         mTransformation[5] = 0.0f;
-        mTransformation[6] = mX.get();
-        mTransformation[7] = mY.get();
+        mTransformation[6] = (float)mX.get();
+        mTransformation[7] = (float)mY.get();
         mTransformation[8] = 1.0f;
     }
 
-    public static AppearanceStep newDataBuilder(float pX, float pY, float pWidth, float pHeight) {
+    public static AppearanceStep newDataBuilder(double pX, double pY, double pWidth, double pHeight) {
         return new Builder(pX, pY, pWidth, pHeight);
     }
 
     public interface AppearanceStep {
         BuildStep withTexture(Texture pTexture);
-        BuildStep withColor(float pColorR, float pColorG, float pColorB);
+        BuildStep withColor(double pColorR, double pColorG, double pColorB);
     }
 
     public interface BuildStep {
-        BuildStep withTheta(float pTheta);
+        BuildStep withTheta(double pTheta);
         BuildStep withTag(String pTag);
         IEntityData build();
     }
@@ -111,20 +113,20 @@ public abstract class Entity {
             BuildStep,
             IEntityData {
 
-        private final float mX;
-        private final float mY;
-        private final float mWidth;
-        private final float mHeight;
+        private final double mX;
+        private final double mY;
+        private final double mWidth;
+        private final double mHeight;
 
         private Texture mTexture = null;
-        private Float mColorR = null;
-        private Float mColorG = null;
-        private Float mColorB = null;
+        private Double mColorR = null;
+        private Double mColorG = null;
+        private Double mColorB = null;
 
-        private float mTheta = 0.0f;
+        private double mTheta = 0.0;
         private String mTag = null;
 
-        Builder(float pX, float pY, float pWidth, float pHeight) {
+        Builder(double pX, double pY, double pWidth, double pHeight) {
             mX = pX;
             mY = pY;
             mWidth = pWidth;
@@ -138,7 +140,7 @@ public abstract class Entity {
         }
 
         @Override
-        public BuildStep withColor(float pColorR, float pColorG, float pColorB) {
+        public BuildStep withColor(double pColorR, double pColorG, double pColorB) {
             mColorR = pColorR;
             mColorG = pColorG;
             mColorB = pColorB;
@@ -146,7 +148,7 @@ public abstract class Entity {
         }
 
         @Override
-        public BuildStep withTheta(float pTheta) {
+        public BuildStep withTheta(double pTheta) {
             mTheta = pTheta;
             return this;
         }
@@ -163,22 +165,22 @@ public abstract class Entity {
         }
 
         @Override
-        public float getX() {
+        public double getX() {
             return mX;
         }
 
         @Override
-        public float getY() {
+        public double getY() {
             return mY;
         }
 
         @Override
-        public float getWidth() {
+        public double getWidth() {
             return mWidth;
         }
 
         @Override
-        public float getHeight() {
+        public double getHeight() {
             return mHeight;
         }
 
@@ -188,22 +190,22 @@ public abstract class Entity {
         }
 
         @Override
-        public Optional<Float> getColorR() {
+        public Optional<Double> getColorR() {
             return Optional.ofNullable(mColorR);
         }
 
         @Override
-        public Optional<Float> getColorG() {
+        public Optional<Double> getColorG() {
             return Optional.ofNullable(mColorG);
         }
 
         @Override
-        public Optional<Float> getColorB() {
+        public Optional<Double> getColorB() {
             return Optional.ofNullable(mColorB);
         }
 
         @Override
-        public float getTheta() {
+        public double getTheta() {
             return mTheta;
         }
 
