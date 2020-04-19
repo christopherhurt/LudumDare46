@@ -62,6 +62,7 @@ class Jaguar extends Entity {
 
     boolean shoot() {
         mHealth--;
+        System.out.println("SHOT, health: " + mHealth);
         boolean killed = mHealth <= 0;
         if (killed) {
             kill();

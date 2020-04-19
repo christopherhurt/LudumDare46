@@ -17,16 +17,17 @@ class Hunter extends Entity {
     private static final Texture AIM_TEXTURE =
             new Texture(new TextureAtlas("res/hunterAim.png"), 0.0, 0.0, 1.0, 1.0);
 
+    // TODO: bug where hunter doesn't fire when sprite changes
     private static final double FIRE_RATE = 1.0;
     private static final Animation MOVING_ANIMATION = new Animation(1.0,
-            new Texture(new TextureAtlas("res/hunterIdle.jpg"), 0.0, 0.0, 1.0, 1.0));
+            new Texture(new TextureAtlas("res/hunterIdle.png"), 0.0, 0.0, 1.0, 1.0));
     private static final Animation AIM_ANIMATION = new Animation(1.0,
             AIM_TEXTURE);
     private static final Animation SHOOTING_ANIMATION = new Animation(FIRE_RATE,
             AIM_TEXTURE,
-            new Texture(new TextureAtlas("res/hunterFire.jpg"), 0.0, 0.0, 1.0, 1.0));
+            new Texture(new TextureAtlas("res/hunterFire.png"), 0.0, 0.0, 1.0, 1.0));
 
-    private static final double SIZE = 0.1;
+    private static final double SIZE = 0.4;
     private static final double BLOOD_SPRAY_INTERVAL = 0.5;
     private static final double MIN_STATE_CHANGE_INTERVAL = 1.0;
     private static final double MAX_STATE_CHANGE_INTERVAL = 3.0;
@@ -87,13 +88,17 @@ class Hunter extends Entity {
             } else {
                 // Shooting
                 if (mCurrentTarget != null) {
-                    mTheta.set(Math.atan2(mCurrentTarget.mY.get() - mY.get(), mCurrentTarget.mX.get() - mX.get()));
+                    mTheta.set(Math.toDegrees(Math.atan2(mCurrentTarget.mY.get() - mY.get(), mCurrentTarget.mX.get() - mX.get())));
 
                     mFireTimer -= Time.getInstance().getDelta();
 
-                    if (mFireTimer <= 0.0 && mCurrentTarget.shoot()) {
-                        // Start moving if jaguar was killed
-                        changeState();
+                    if (mFireTimer <= 0.0) {
+                        if (mCurrentTarget.shoot()) {
+                            // Start moving if jaguar was killed
+                            changeState();
+                        } else {
+                            mFireTimer = FIRE_RATE;
+                        }
                     }
                 } else {
                     // Look for a target
