@@ -61,17 +61,25 @@ class Jaguar extends Entity {
     }
 
     boolean shoot() {
-        mHealth--;
-        boolean killed = mHealth <= 0;
-        if (killed) {
-            kill();
+        boolean noHealth = isDead();
+        if (!isDead()) {
+            mHealth--;
+            noHealth = isDead();
+            if (noHealth) {
+                kill();
+            }
         }
-        return killed;
+        return noHealth;
     }
 
     void kill() {
+        mHealth = 0;
         EntityManager.getInstance().removeEntity(this);
         BloodParticles.newParticleSystem(mX.get(), mY.get());
+    }
+
+    boolean isDead() {
+        return mHealth <= 0;
     }
 
 }

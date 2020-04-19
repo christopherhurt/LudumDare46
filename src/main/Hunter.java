@@ -36,7 +36,9 @@ class Hunter extends Entity {
     private static final double MIN_SPEED = 0.25;
     private static final double MAX_SPEED = 0.75;
     private static final double SPEED_SCALAR = 0.3;
-    private static final double CORNER_WEIGHT = 100.0;
+    private static final double CORNER_WEIGHT = 1.0;
+    private static final double DISTANCE_POWER = 1000;
+    private static final double VELOCITY_THRESHOLD = 0.00000001;
 
     private final HealthManager mHealthManager;
 
@@ -72,16 +74,27 @@ class Hunter extends Entity {
                         pEntity.getTag().filter(pTag -> pTag.equals(Tag.JAGUAR.getTag())).isPresent())
                         .collect(Collectors.toList());
 
-                Optional<Double> jaguarSumX = jaguars.stream().map(pJaguar ->
-                        pJaguar.mX.get() / MathUtils.getDistance(pJaguar.mX.get(), pJaguar.mY.get(), mX.get(), mY.get())).reduce(Double::sum);
-                Optional<Double> jaguarSumY = jaguars.stream().map(pJaguar ->
-                        pJaguar.mY.get() / MathUtils.getDistance(pJaguar.mX.get(), pJaguar.mY.get(), mX.get(), mY.get())).reduce(Double::sum);
-                double rayX = mX.get() - (jaguarSumX.orElse(0.0) + mX.get() < 0.0 ? -CORNER_WEIGHT : CORNER_WEIGHT) / (jaguars.size() + 1.0);
-                double rayY = mY.get() - (jaguarSumY.orElse(0.0) + mY.get() < 0.0 ? -CORNER_WEIGHT : CORNER_WEIGHT) / (jaguars.size() + 1.0);
+                Optional<Double> jaguarSumX = jaguars.stream().map(pJaguar -> {
+                    double distance = MathUtils.getDistance(pJaguar.mX.get(), pJaguar.mY.get(), mX.get(), mY.get());
+                    return pJaguar.mX.get() / Math.pow(distance, DISTANCE_POWER);
+                }).reduce(Double::sum);
+                Optional<Double> jaguarSumY = jaguars.stream().map(pJaguar -> {
+                    double distance = MathUtils.getDistance(pJaguar.mX.get(), pJaguar.mY.get(), mX.get(), mY.get());
+                    return pJaguar.mY.get() / Math.pow(distance, DISTANCE_POWER);
+                }).reduce(Double::sum);
+
+                double cornerX = mX.get() == 0 ? 1.0 : mX.get() / Math.abs(mX.get());
+                double cornerY = mY.get() == 0 ? 1.0 : mY.get() / Math.abs(mY.get());
+                double cornerDistance = MathUtils.getDistance(mX.get(), mY.get(), cornerX, cornerY);
+                double cornerWeightX = cornerX * CORNER_WEIGHT / Math.pow(cornerDistance, DISTANCE_POWER);
+                double cornerWeightY = cornerY * CORNER_WEIGHT / Math.pow(cornerDistance, DISTANCE_POWER);
+
+                double rayX = mX.get() - (jaguarSumX.orElse(0.0) + cornerWeightX) / (jaguars.size() + 1.0);
+                double rayY = mY.get() - (jaguarSumY.orElse(0.0) + cornerWeightY) / (jaguars.size() + 1.0);
 
                 double velocityX = rayX == 0.0 ? 0.0 : 1.0 / rayX;
                 double velocityY = rayY == 0.0 ? 0.0 : 1.0 / rayY;
-                if (velocityX != 0.0 || velocityY != 0.0) {
+                if (Math.abs(velocityX) > VELOCITY_THRESHOLD || Math.abs(velocityY) > VELOCITY_THRESHOLD) {
                     double length = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
                     double speed = Math.max(MIN_SPEED, Math.min(MAX_SPEED, length * SPEED_SCALAR));
                     velocityX = velocityX / length * speed;
@@ -99,16 +112,20 @@ class Hunter extends Entity {
             } else {
                 // Shooting
                 if (mCurrentTarget != null) {
-                    mTheta.set(Math.toDegrees(Math.atan2(mCurrentTarget.mY.get() - mY.get(), mCurrentTarget.mX.get() - mX.get())));
+                    if (mCurrentTarget.isDead()) {
+                        changeState();
+                    } else {
+                        mTheta.set(Math.toDegrees(Math.atan2(mCurrentTarget.mY.get() - mY.get(), mCurrentTarget.mX.get() - mX.get())));
 
-                    mFireTimer -= Time.getInstance().getDelta();
+                        mFireTimer -= Time.getInstance().getDelta();
 
-                    if (mFireTimer <= 0.0) {
-                        if (mCurrentTarget.shoot()) {
-                            // Start moving if jaguar was killed
-                            changeState();
-                        } else {
-                            mFireTimer = FIRE_RATE;
+                        if (mFireTimer <= 0.0) {
+                            if (mCurrentTarget.shoot()) {
+                                // Start moving if jaguar was killed
+                                changeState();
+                            } else {
+                                mFireTimer = FIRE_RATE;
+                            }
                         }
                     }
                 } else {
