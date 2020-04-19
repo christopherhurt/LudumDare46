@@ -1,6 +1,5 @@
 package main;
 
-import sun.plugin.dom.exception.InvalidStateException;
 import util.Entity;
 import util.EntityManager;
 import util.IEntityData;
@@ -71,7 +70,7 @@ class JaguarManager extends Entity {
             spawnX = randomBoundary;
             spawnY = -fixedBoundary;
         } else {
-            throw new InvalidStateException("Invalid jaguar spawn side " + side);
+            throw new IllegalStateException("Invalid jaguar spawn side " + side);
         }
 
         EntityManager.getInstance().addEntity(new Jaguar(spawnX, spawnY, mHunter));
