@@ -7,24 +7,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-final class Shader {
-
-    private static class InstanceHolder {
-        static final Shader INSTANCE = new Shader();
-    }
-
-    static Shader getInstance() {
-        return InstanceHolder.INSTANCE;
-    }
+abstract class Shader {
 
     private static final String VERTEX_FILE = "src/shaders/entityVert.glsl";
-    private static final String FRAGMENT_FILE = "src/shaders/entityFrag.glsl";
 
-    private int mProgram;
+    final int mProgram;
 
-    private Shader() {
+    Shader(String pFragmentFile) {
         int vertex = loadShader(VERTEX_FILE, GL20.GL_VERTEX_SHADER);
-        int fragment = loadShader(FRAGMENT_FILE, GL20.GL_FRAGMENT_SHADER);
+        int fragment = loadShader(pFragmentFile, GL20.GL_FRAGMENT_SHADER);
 
         int program = GL20.glCreateProgram();
         GL20.glAttachShader(program, vertex);
@@ -35,9 +26,7 @@ final class Shader {
         GL20.glDeleteShader(vertex);
         GL20.glDeleteShader(fragment);
 
-        GL20.glUseProgram(program);
         mProgram = program;
-        setup();
     }
 
     private static int loadShader(String pPath, int pType) {
@@ -60,29 +49,12 @@ final class Shader {
         return shader;
     }
 
-    private void setup() {
-        GL20.glBindAttribLocation(mProgram, 0, "iPos");
+    void use() {
+        GL20.glUseProgram(mProgram);
     }
 
     void loadTransformation(float[] pVals) {
         GL20.glUniformMatrix3fv(GL20.glGetUniformLocation(mProgram, "uTransformation"), false, pVals);
-    }
-
-    void loadTexture(int pTexture, float[] pVals) {
-        GL20.glUniform1i(GL20.glGetUniformLocation(mProgram, "uTexture"), pTexture);
-        GL20.glUniform4fv(GL20.glGetUniformLocation(mProgram, "uTexCoordInfo"), pVals);
-    }
-
-    void loadHasTexture(boolean pHasTexture) {
-        GL20.glUniform1i(GL20.glGetUniformLocation(mProgram, "uHasTexture"), pHasTexture ? 1 : 0);
-    }
-
-    void loadColor(float pRed, float pGreen, float pBlue) {
-        GL20.glUniform3f(GL20.glGetUniformLocation(mProgram, "uColor"), pRed, pGreen, pBlue);
-    }
-
-    void loadOpacity(float pOpacity) {
-        GL20.glUniform1f(GL20.glGetUniformLocation(mProgram, "uOpacity"), pOpacity);
     }
 
 }

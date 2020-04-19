@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public abstract class Entity {
 
-    private static final Shader SHADER = Shader.getInstance();
+    private static final EntityShader SHADER = EntityShader.getInstance();
 
     public final DoubleProperty mX;
     public final DoubleProperty mY;

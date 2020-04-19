@@ -20,6 +20,7 @@ public final class EntityManager {
     }
 
     private final List<Entity> mEntities = new ArrayList<>();
+    private final List<ParticleSystem> mParticleSystems = new ArrayList<>();
 
     private boolean mResetOnUpdateFinish = false;
 
@@ -34,6 +35,14 @@ public final class EntityManager {
         mEntities.remove(pEntity);
     }
 
+    public void addParticleSystem(ParticleSystem pParticleSystem) {
+        mParticleSystems.add(pParticleSystem);
+    }
+
+    void removeParticleSystem(ParticleSystem pParticleSystem) {
+        mParticleSystems.remove(pParticleSystem);
+    }
+
     public List<Entity> getEntities() {
         return mEntities;
     }
@@ -44,9 +53,11 @@ public final class EntityManager {
 
     void updateAll() {
         new ArrayList<>(mEntities).forEach(Entity::update);
+        new ArrayList<>(mParticleSystems).forEach(ParticleSystem::update);
 
         if (mResetOnUpdateFinish) {
             mEntities.clear();
+            mParticleSystems.clear();
             AudioFactory.stopAll();
             SceneSetup.setup(this);
             mResetOnUpdateFinish = false;
@@ -54,7 +65,11 @@ public final class EntityManager {
     }
 
     void renderAll() {
+        EntityShader.getInstance().use();
         mEntities.forEach(Entity::prepareAndRender);
+
+        ParticleShader.getInstance().use();
+        mParticleSystems.forEach(ParticleSystem::prepareAndRender);
     }
 
 }

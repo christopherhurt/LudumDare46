@@ -21,7 +21,7 @@ public class Texture {
     void load(int pUnit) {
         GL13.glActiveTexture(pUnit);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, mAtlas.getTexture());
-        Shader.getInstance().loadTexture(pUnit, mCoordinates);
+        EntityShader.getInstance().loadTexture(pUnit, mCoordinates);
     }
 
 }

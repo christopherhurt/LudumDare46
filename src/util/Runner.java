@@ -30,6 +30,7 @@ public final class Runner {
         GL11.glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
 
         EntityManager.getInstance().reset();
+        Time.getInstance().markFrame();
 
         while (!GLFW.glfwWindowShouldClose(window)) {
             Time.getInstance().markFrame();
