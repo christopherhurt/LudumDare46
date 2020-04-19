@@ -13,13 +13,17 @@ uniform float uOpacity;
 
 void main() {
     vec3 outColor;
+    float outOpacity;
 
     if (uHasTexture > 0) {
         vec2 textureCoord = iPassTexCoords * uTexCoordInfo.zw + uTexCoordInfo.xy;
-        outColor = texture(uTexture, textureCoord).rgb;
+        vec4 texColor = texture(uTexture, textureCoord);
+        outColor = texColor.rgb;
+        outOpacity = texColor.a * uOpacity;
     } else {
         outColor = uColor;
+        outOpacity = uOpacity;
     }
 
-    oFragColor = vec4(outColor, uOpacity);
+    oFragColor = vec4(outColor, outOpacity);
 }
