@@ -23,16 +23,19 @@ public class TextureAtlas {
         STBImage.stbi_set_flip_vertically_on_load(true);
 
         try (MemoryStack stack = MemoryStack.stackPush()) {
-            IntBuffer width = stack.mallocInt(1);
-            IntBuffer height = stack.mallocInt(1);
-            IntBuffer channels = stack.mallocInt(1);
+            IntBuffer widthMem = stack.mallocInt(1);
+            IntBuffer heightMem = stack.mallocInt(1);
+            IntBuffer channelsMem = stack.mallocInt(1);
 
-            ByteBuffer image = STBImage.stbi_load(pFilePath, width, height, channels, 4);
+            ByteBuffer image = STBImage.stbi_load(pFilePath, widthMem, heightMem, channelsMem, 4);
             if (image == null) {
                 throw new IllegalArgumentException("Failed to load texture " + pFilePath);
             }
 
-            GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width.get(), height.get(), 0,
+            int width = widthMem.get();
+            int height = heightMem.get();
+
+            GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width, height, 0,
                     GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, image);
 
             STBImage.stbi_image_free(image);

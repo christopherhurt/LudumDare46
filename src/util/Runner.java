@@ -39,6 +39,9 @@ public final class Runner {
             EntityManager.getInstance().renderAll();
             GLFW.glfwSwapBuffers(window);
         }
+
+        AudioFactory.destroy();
+        GLFW.glfwTerminate();
     }
 
     private Runner() {}

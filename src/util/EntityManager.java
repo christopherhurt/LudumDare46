@@ -47,6 +47,7 @@ public final class EntityManager {
 
         if (mResetOnUpdateFinish) {
             mEntities.clear();
+            AudioFactory.stopAll();
             SceneSetup.setup(this);
             mResetOnUpdateFinish = false;
         }

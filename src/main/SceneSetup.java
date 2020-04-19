@@ -1,10 +1,16 @@
 package main;
 
+import util.Audio;
+import util.AudioFactory;
 import util.EntityManager;
 
 public final class SceneSetup {
 
+    private static final Audio MUSIC = AudioFactory.createMusic("res/I said hey.ogg", 0.03f);
+
     public static void setup(EntityManager pEntityManager) {
+        MUSIC.play();
+
         HealthManager healthManager = new HealthManager();
         pEntityManager.addEntity(healthManager);
 
