@@ -2,15 +2,21 @@ package main;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.lwjgl.opengl.GL11;
 import util.Entity;
 import util.EntityManager;
 import util.IEntityData;
+import util.Texture;
+import util.TextureAtlas;
 
 class HealthManager extends Entity {
 
+    private static final Texture HEART_TEXTURE = new Texture(new TextureAtlas("res/heart.png", GL11.GL_LINEAR),
+            0.0, 0.0, 1.0, 1.0);
+
     private static final int INITIAL_LIVES = 3;
 
-    private static final double HEART_SIZE = 0.04;
+    private static final double HEART_SIZE = 0.06;
     private static final double HEART_SPACING = 0.02;
     private static final double HEART_Y = 1.0 - HEART_SIZE / 2.0 - HEART_SPACING;
 
@@ -39,7 +45,7 @@ class HealthManager extends Entity {
 
     private static Entity constructHeart(double pX) {
         IEntityData heartData = Entity.newDataBuilder(pX, HEART_Y, HEART_SIZE, HEART_SIZE)
-                                    .withColor(1.0, 0.0, 0.0)
+                                    .withTexture(HEART_TEXTURE)
                                     .build();
         return new Entity(heartData) {
             @Override

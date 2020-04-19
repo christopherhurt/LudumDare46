@@ -16,7 +16,7 @@ public class TextureAtlas {
         this(pFilePath, GL11.GL_NEAREST);
     }
 
-    TextureAtlas(String pFilePath, int pFiltering) {
+    public TextureAtlas(String pFilePath, int pFiltering) {
         mTexture = GL11.glGenTextures();
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, mTexture);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL15.GL_CLAMP_TO_EDGE);

@@ -53,8 +53,13 @@ class Jaguar extends Entity {
         double newDistance = MathUtils.getDistance(mX.get(), mY.get(), mHunter.mX.get(), mHunter.mY.get());
         if (newDistance <= DAMAGE_RADIUS && !mHunter.isDead()) {
             mHunter.inflictDamage();
-            EntityManager.getInstance().removeEntity(this);
+            kill();
         }
+    }
+
+    void kill() {
+        EntityManager.getInstance().removeEntity(this);
+        BloodParticles.newParticleSystem(mX.get(), mY.get());
     }
 
 }

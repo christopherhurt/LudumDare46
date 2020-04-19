@@ -1,5 +1,6 @@
 package main;
 
+import java.util.stream.Collectors;
 import util.Entity;
 import util.EntityManager;
 import util.IEntityData;
@@ -34,9 +35,10 @@ class Target extends Entity {
 
         if (mLife <= 0.0) {
             // Kill any nearby jaguars
-            EntityManager.getInstance().getEntities().removeIf(pEntity ->
+            EntityManager.getInstance().getEntities().stream().filter(pEntity ->
                     pEntity.getTag().filter(pTag -> pTag.equals(Tag.JAGUAR.getTag())).isPresent()
-                            && MathUtils.getDistance(mX.get(), mY.get(), pEntity.mX.get(), pEntity.mY.get()) <= EXPLOSION_RADIUS);
+                            && MathUtils.getDistance(mX.get(), mY.get(), pEntity.mX.get(), pEntity.mY.get()) <= EXPLOSION_RADIUS)
+                    .collect(Collectors.toList()).forEach(pEntity -> ((Jaguar)pEntity).kill());
             EntityManager.getInstance().removeEntity(this);
         }
     }
