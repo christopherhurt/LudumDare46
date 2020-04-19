@@ -12,6 +12,10 @@ public class Animation {
         mTextures = pTextures;
     }
 
+    public void restart() {
+        mTimer = 0.0;
+    }
+
     Texture updateAndGetCurrentTexture() {
         mTimer += Time.getInstance().getDelta();
         int index = (int)((mTimer % mDuration) / mDuration * mTextures.length);

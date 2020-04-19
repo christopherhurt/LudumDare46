@@ -13,8 +13,8 @@ public abstract class Entity {
     public final DoubleProperty mWidth;
     public final DoubleProperty mHeight;
     public final DoubleProperty mTheta;
-    private final Animation mAnimation;
 
+    private Animation mAnimation;
     private Texture mTexture;
     private double mColorR = 0.0;
     private double mColorG = 0.0;
@@ -44,6 +44,10 @@ public abstract class Entity {
 
     public Optional<String> getTag() {
         return Optional.ofNullable(mTag);
+    }
+
+    public void setAnimation(Animation pAnimation) {
+        mAnimation = pAnimation;
     }
 
     public void setTexture(Texture pTexture) {

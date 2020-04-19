@@ -22,8 +22,11 @@ class Jaguar extends Entity {
 
     private static final double SPEED = 0.25;
     private static final double DAMAGE_RADIUS = 0.1;
+    private static final int HEALTH = 3;
 
     private final Hunter mHunter;
+
+    private int mHealth = HEALTH;
 
     Jaguar(double pX, double pY, Hunter pHunter) {
         super(buildJaguar(pX, pY));
@@ -55,6 +58,15 @@ class Jaguar extends Entity {
             mHunter.inflictDamage();
             kill();
         }
+    }
+
+    boolean shoot() {
+        mHealth--;
+        boolean killed = mHealth <= 0;
+        if (killed) {
+            kill();
+        }
+        return killed;
     }
 
     void kill() {
