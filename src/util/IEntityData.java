@@ -9,6 +9,7 @@ public interface IEntityData {
     double getWidth();
     double getHeight();
     Optional<Texture> getTexture();
+    Optional<Animation> getAnimation();
     Optional<Double> getColorR();
     Optional<Double> getColorG();
     Optional<Double> getColorB();

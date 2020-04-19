@@ -13,6 +13,7 @@ public abstract class Entity {
     public final DoubleProperty mWidth;
     public final DoubleProperty mHeight;
     public final DoubleProperty mTheta;
+    private final Animation mAnimation;
 
     private Texture mTexture;
     private double mColorR = 0.0;
@@ -35,6 +36,7 @@ public abstract class Entity {
         if (pData.getColorR().isPresent() && pData.getColorG().isPresent() && pData.getColorB().isPresent()) {
             setColor(pData.getColorR().get(), pData.getColorG().get(), pData.getColorB().get());
         }
+        mAnimation = pData.getAnimation().orElse(null);
         mOpacity = pData.getOpacity();
     }
 
@@ -70,13 +72,14 @@ public abstract class Entity {
             }
             SHADER.loadTransformation(mTransformation);
 
-            boolean hasTexture = mTexture != null;
-            SHADER.loadHasTexture(hasTexture);
-            if (hasTexture) {
+            if (mAnimation != null) {
+                mAnimation.updateAndGetCurrentTexture().load(0);
+            } else if (mTexture != null) {
                 mTexture.load(0);
             } else {
                 SHADER.loadColor((float)mColorR, (float)mColorG, (float)mColorB);
             }
+            SHADER.loadHasTexture(mAnimation != null || mTexture != null);
 
             SHADER.loadOpacity((float)mOpacity);
 
@@ -107,6 +110,7 @@ public abstract class Entity {
     public interface AppearanceStep {
         BuildStep withTexture(Texture pTexture);
         BuildStep withColor(double pColorR, double pColorG, double pColorB);
+        BuildStep withAnimation(Animation pAnimation);
     }
 
     public interface BuildStep {
@@ -131,6 +135,7 @@ public abstract class Entity {
         private Double mColorR = null;
         private Double mColorG = null;
         private Double mColorB = null;
+        private Animation mAnimation = null;
 
         private double mTheta = 0.0;
         private String mTag = null;
@@ -154,6 +159,12 @@ public abstract class Entity {
             mColorR = pColorR;
             mColorG = pColorG;
             mColorB = pColorB;
+            return this;
+        }
+
+        @Override
+        public BuildStep withAnimation(Animation pAnimation) {
+            mAnimation = pAnimation;
             return this;
         }
 
@@ -218,6 +229,11 @@ public abstract class Entity {
         @Override
         public Optional<Double> getColorB() {
             return Optional.ofNullable(mColorB);
+        }
+
+        @Override
+        public Optional<Animation> getAnimation() {
+            return Optional.ofNullable(mAnimation);
         }
 
         @Override
