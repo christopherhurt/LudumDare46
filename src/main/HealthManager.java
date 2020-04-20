@@ -22,9 +22,9 @@ class HealthManager extends Entity {
 
     private static final int INITIAL_LIVES = 3;
 
-    private static final double HEART_SIZE = 0.06;
-    private static final double HEART_SPACING = 0.02;
-    private static final double HEART_Y = 1.0 - HEART_SIZE / 2.0 - HEART_SPACING;
+    static final double HEART_SIZE = 0.06;
+    static final double HEART_SPACING = 0.02;
+    static final double HEART_Y = 1.0 - HEART_SIZE / 2.0 - HEART_SPACING;
 
     private static final double GAME_OVER_OVERLAY_Y = 0.75;
     private static final double GAME_OVER_OVERLAY_SIZE = 0.5;

@@ -18,8 +18,11 @@ public final class SceneSetup {
 
         pEntityManager.addEntity(new TargetManager(healthManager));
 
+        ScreenWhipe screenWhipe = new ScreenWhipe();
+        pEntityManager.addEntity(screenWhipe);
+
         Hunter hunter = new Hunter(healthManager);
-        pEntityManager.addEntity(new JaguarManager(hunter));
+        pEntityManager.addEntity(new JaguarManager(hunter, screenWhipe));
         pEntityManager.addEntity(hunter);
     }
 

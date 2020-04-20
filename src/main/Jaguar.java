@@ -29,12 +29,14 @@ class Jaguar extends Entity {
     private static final int HEALTH = 3;
 
     private final Hunter mHunter;
+    private final ScreenWhipe mScreenWhipe;
 
     private int mHealth = HEALTH;
 
-    Jaguar(double pX, double pY, Hunter pHunter) {
+    Jaguar(double pX, double pY, Hunter pHunter, ScreenWhipe pScreenWhipe) {
         super(buildJaguar(pX, pY));
         mHunter = pHunter;
+        mScreenWhipe = pScreenWhipe;
     }
 
     private static IEntityData buildJaguar(double pX, double pY) {
@@ -69,22 +71,29 @@ class Jaguar extends Entity {
     }
 
     boolean shoot() {
-        return false; // TODO
-//        boolean noHealth = isDead();
-//        if (!isDead()) {
-//            mHealth--;
-//            noHealth = isDead();
-//            if (noHealth) {
-//                kill();
-//            }
-//        }
-//        return noHealth;
+        boolean noHealth = isDead();
+        if (!isDead()) {
+            mHealth--;
+            noHealth = isDead();
+            if (noHealth) {
+                kill();
+            }
+        }
+        return noHealth;
     }
 
     void kill() {
+        kill(true);
+    }
+
+    void kill(boolean pLogKill) {
         mHealth = 0;
         EntityManager.getInstance().removeEntity(this);
         BloodParticles.newParticleSystem(mX.get(), mY.get());
+
+        if (pLogKill) {
+            mScreenWhipe.logKill();
+        }
     }
 
     boolean isDead() {
