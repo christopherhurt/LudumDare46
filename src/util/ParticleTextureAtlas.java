@@ -18,7 +18,6 @@ public class ParticleTextureAtlas {
 
     void loadAndBind() {
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, mTexture);
-        SHADER.loadTextureAtlas(0);
         SHADER.loadAtlasSize(mSideLength);
         SHADER.loadStageCount(mStageCount);
     }

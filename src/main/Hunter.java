@@ -1,9 +1,8 @@
 package main;
 
 import java.util.Comparator;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import org.lwjgl.opengl.GL11;
 import util.Animation;
 import util.Entity;
 import util.EntityManager;
@@ -16,29 +15,24 @@ import util.Time;
 class Hunter extends Entity {
 
     private static final Texture AIM_TEXTURE =
-            new Texture(new TextureAtlas("res/hunterAim.png"), 0.0, 0.0, 1.0, 1.0);
+            new Texture(new TextureAtlas("res/hunterAim.png", GL11.GL_LINEAR), 0.0, 0.0, 1.0, 1.0);
 
-    // TODO: bug where hunter doesn't fire when sprite changes
-    private static final double FIRE_RATE = 1.0;
+    private static final double FIRE_RATE = 0.5;
     private static final Animation MOVING_ANIMATION = new Animation(1.0,
-            new Texture(new TextureAtlas("res/hunterIdle.png"), 0.0, 0.0, 1.0, 1.0));
+            new Texture(new TextureAtlas("res/hunterIdle.png", GL11.GL_LINEAR), 0.0, 0.0, 1.0, 1.0));
     private static final Animation AIM_ANIMATION = new Animation(1.0,
             AIM_TEXTURE);
     private static final Animation SHOOTING_ANIMATION = new Animation(FIRE_RATE,
             AIM_TEXTURE,
-            new Texture(new TextureAtlas("res/hunterFire.png"), 0.0, 0.0, 1.0, 1.0));
+            new Texture(new TextureAtlas("res/hunterFire.png", GL11.GL_LINEAR), 0.0, 0.0, 1.0, 1.0));
 
     private static final double SIZE = 0.4;
     private static final double BLOOD_SPRAY_INTERVAL = 0.5;
-    private static final double MIN_STATE_CHANGE_INTERVAL = 1.0;
-    private static final double MAX_STATE_CHANGE_INTERVAL = 3.0;
+    private static final double MIN_STATE_CHANGE_INTERVAL = 0.5;
+    private static final double MAX_STATE_CHANGE_INTERVAL = 1.0;
 
-    private static final double MIN_SPEED = 0.25;
-    private static final double MAX_SPEED = 0.75;
-    private static final double SPEED_SCALAR = 0.3;
-    private static final double CORNER_WEIGHT = 1.0;
-    private static final double DISTANCE_POWER = 1000;
-    private static final double VELOCITY_THRESHOLD = 0.00000001;
+    private static final double INSET = 0.1;
+    private static final double SPEED = 0.25;
 
     private final HealthManager mHealthManager;
 
@@ -70,44 +64,31 @@ class Hunter extends Entity {
 
             if (mState) {
                 // Moving
-                List<Entity> jaguars = EntityManager.getInstance().getEntities().stream().filter(pEntity ->
+                Optional<Entity> closestJaguar = EntityManager.getInstance().getEntities().stream().filter(pEntity ->
                         pEntity.getTag().filter(pTag -> pTag.equals(Tag.JAGUAR.getTag())).isPresent())
-                        .collect(Collectors.toList());
+                        .min(Comparator.comparingDouble(pJaguar ->
+                                MathUtils.getDistance(pJaguar.mX.get(), pJaguar.mY.get(), mX.get(), mY.get())));
 
-                Optional<Double> jaguarSumX = jaguars.stream().map(pJaguar -> {
-                    double distance = MathUtils.getDistance(pJaguar.mX.get(), pJaguar.mY.get(), mX.get(), mY.get());
-                    return pJaguar.mX.get() / Math.pow(distance, DISTANCE_POWER);
-                }).reduce(Double::sum);
-                Optional<Double> jaguarSumY = jaguars.stream().map(pJaguar -> {
-                    double distance = MathUtils.getDistance(pJaguar.mX.get(), pJaguar.mY.get(), mX.get(), mY.get());
-                    return pJaguar.mY.get() / Math.pow(distance, DISTANCE_POWER);
-                }).reduce(Double::sum);
-
-                double cornerX = mX.get() == 0 ? 1.0 : mX.get() / Math.abs(mX.get());
-                double cornerY = mY.get() == 0 ? 1.0 : mY.get() / Math.abs(mY.get());
-                double cornerDistance = MathUtils.getDistance(mX.get(), mY.get(), cornerX, cornerY);
-                double cornerWeightX = cornerX * CORNER_WEIGHT / Math.pow(cornerDistance, DISTANCE_POWER);
-                double cornerWeightY = cornerY * CORNER_WEIGHT / Math.pow(cornerDistance, DISTANCE_POWER);
-
-                double rayX = mX.get() - (jaguarSumX.orElse(0.0) + cornerWeightX) / (jaguars.size() + 1.0);
-                double rayY = mY.get() - (jaguarSumY.orElse(0.0) + cornerWeightY) / (jaguars.size() + 1.0);
-
-                double velocityX = rayX == 0.0 ? 0.0 : 1.0 / rayX;
-                double velocityY = rayY == 0.0 ? 0.0 : 1.0 / rayY;
-                if (Math.abs(velocityX) > VELOCITY_THRESHOLD || Math.abs(velocityY) > VELOCITY_THRESHOLD) {
+                double velocityX;
+                double velocityY;
+                if (closestJaguar.isPresent()) {
+                    velocityX = mX.get() - closestJaguar.get().mX.get();
+                    velocityY = mY.get() - closestJaguar.get().mY.get();
                     double length = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
-                    double speed = Math.max(MIN_SPEED, Math.min(MAX_SPEED, length * SPEED_SCALAR));
-                    velocityX = velocityX / length * speed;
-                    velocityY = velocityY / length * speed;
+                    velocityX = velocityX / length * SPEED;
+                    velocityY = velocityY / length * SPEED;
+                } else {
+                    velocityX = 0.0;
+                    velocityY = 0.0;
                 }
 
                 double newX = mX.get() + velocityX * Time.getInstance().getDelta();
                 double newY = mY.get() + velocityY * Time.getInstance().getDelta();
 
                 // Don't let the hunter run offscreen
-                double rightBound = 1.0 - mWidth.get() * 0.28 / 2.0;
+                double rightBound = 1.0 - mWidth.get() * 0.28 / 2.0 - INSET;
                 mX.set(Math.max(-rightBound, Math.min(rightBound, newX)));
-                double topBound = 1.0 - mHeight.get() * 0.28 / 2.0;
+                double topBound = 1.0 - mHeight.get() * 0.28 / 2.0 - INSET;
                 mY.set(Math.max(-topBound, Math.min(topBound, newY)));
             } else {
                 // Shooting

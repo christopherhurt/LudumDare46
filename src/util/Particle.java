@@ -6,7 +6,7 @@ class Particle {
 
     private static final ParticleShader SHADER = ParticleShader.getInstance();
 
-    private static final double SIZE = 0.02;
+    private static final double SIZE = 0.04;
     private static final double MOVING_TIME = 2;
 
     private static final float[] TRANSFORMATION_HOLDER = new float[9];
@@ -14,15 +14,17 @@ class Particle {
     private final double mTrajX;
     private final double mTrajY;
     private final double mInitialSpeed;
+    private final ParticleTextureAtlas mAtlas;
 
     private double mOffsetX;
     private double mOffsetY;
     private double mSpeed;
 
-    Particle(double pOffsetX, double pOffsetY, double pTrajX, double pTrajY, double pInitialSpeed) {
+    Particle(double pOffsetX, double pOffsetY, double pTrajX, double pTrajY, double pInitialSpeed, ParticleTextureAtlas pAtlas) {
         mOffsetX = pOffsetX;
         mOffsetY = pOffsetY;
         mInitialSpeed = pInitialSpeed;
+        mAtlas = pAtlas;
 
         double trajLength = Math.sqrt(pTrajX * pTrajX + pTrajY * pTrajY);
         mTrajX = pTrajX / trajLength;
@@ -41,6 +43,7 @@ class Particle {
     }
 
     void prepareAndRender(double pSystemX, double pSystemY) {
+        mAtlas.loadAndBind();
         buildTransformation(pSystemX, pSystemY);
         SHADER.loadTransformation(TRANSFORMATION_HOLDER);
         GL11.glDrawElements(GL11.GL_TRIANGLES, QuadMesh.INDEX_COUNT, GL11.GL_UNSIGNED_INT, 0);

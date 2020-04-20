@@ -9,7 +9,7 @@ import util.Time;
 
 class TargetManager extends Entity {
 
-    private static final double COOLDOWN = 1.0;
+    private static final double COOLDOWN = 0.75;
 
     private final HealthManager mHealthManager;
 

@@ -48,6 +48,9 @@ public abstract class Entity {
 
     public void setAnimation(Animation pAnimation) {
         mAnimation = pAnimation;
+        if (mAnimation != null) {
+            mAnimation.restart();
+        }
     }
 
     public void setTexture(Texture pTexture) {

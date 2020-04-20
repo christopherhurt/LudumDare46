@@ -7,15 +7,17 @@ import util.ParticleTextureAtlas;
 
 final class BloodParticles {
 
-    private static final ParticleTextureAtlas BLOOD_PARTICLE_ATLAS =
-            new ParticleTextureAtlas("res/particleTest.png", 4, 15);
+    private static final ParticleTextureAtlas[] BLOOD_PARTICLE_ATLASES = {
+            new ParticleTextureAtlas("res/blood.png", 8, 7),
+            new ParticleTextureAtlas("res/blood2.png", 8, 7),
+    };
 
     static void newParticleSystem(Entity pEntity) {
-        EntityManager.getInstance().addParticleSystem(new ParticleSystem(BLOOD_PARTICLE_ATLAS, pEntity));
+        EntityManager.getInstance().addParticleSystem(new ParticleSystem(BLOOD_PARTICLE_ATLASES, pEntity));
     }
 
     static void newParticleSystem(double pX, double pY) {
-        EntityManager.getInstance().addParticleSystem(new ParticleSystem(BLOOD_PARTICLE_ATLAS, pX, pY));
+        EntityManager.getInstance().addParticleSystem(new ParticleSystem(BLOOD_PARTICLE_ATLASES, pX, pY));
     }
 
 }

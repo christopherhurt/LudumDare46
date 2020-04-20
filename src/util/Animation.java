@@ -12,7 +12,7 @@ public class Animation {
         mTextures = pTextures;
     }
 
-    public void restart() {
+    void restart() {
         mTimer = 0.0;
     }
 

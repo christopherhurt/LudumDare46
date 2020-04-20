@@ -1,5 +1,6 @@
 package main;
 
+import util.Animation;
 import util.Entity;
 import util.EntityManager;
 import util.IEntityData;
@@ -10,14 +11,17 @@ import util.Time;
 
 class Jaguar extends Entity {
 
-    static final double WIDTH = 0.25;
-    static final double HEIGHT = 0.125;
+    static final double WIDTH = 0.6;
+    static final double HEIGHT = WIDTH / 4.0;
 
-    private static final Texture TEXTURE;
+    private static final double ANIMATION_DURATION = 0.5;
+    private static final TextureAtlas ATLAS = new TextureAtlas("res/jaguar_sprites.png");
+    private static final Texture[] TEXTURES;
     static {
-        TextureAtlas atlas = new TextureAtlas("res/jaguar.png");
-        double textureHeight = HEIGHT / WIDTH;
-        TEXTURE = new Texture(atlas, 0.0, 0.5 - textureHeight / 2.0, 1.0, textureHeight);
+        TEXTURES = new Texture[13];
+        for (int i = 0; i < TEXTURES.length; i++) {
+            TEXTURES[i] = new Texture(ATLAS, 0.0, (i + 3) * 0.0625, 0.25, 0.0625);
+        }
     }
 
     private static final double SPEED = 0.25;
@@ -35,9 +39,13 @@ class Jaguar extends Entity {
 
     private static IEntityData buildJaguar(double pX, double pY) {
         return Entity.newDataBuilder(pX, pY, WIDTH, HEIGHT)
-                    .withTexture(TEXTURE)
+                    .withAnimation(newAnimation())
                     .withTag(Tag.JAGUAR.getTag())
                     .build();
+    }
+
+    private static Animation newAnimation() {
+        return new Animation(ANIMATION_DURATION, TEXTURES);
     }
 
     @Override
@@ -61,15 +69,16 @@ class Jaguar extends Entity {
     }
 
     boolean shoot() {
-        boolean noHealth = isDead();
-        if (!isDead()) {
-            mHealth--;
-            noHealth = isDead();
-            if (noHealth) {
-                kill();
-            }
-        }
-        return noHealth;
+        return false; // TODO
+//        boolean noHealth = isDead();
+//        if (!isDead()) {
+//            mHealth--;
+//            noHealth = isDead();
+//            if (noHealth) {
+//                kill();
+//            }
+//        }
+//        return noHealth;
     }
 
     void kill() {

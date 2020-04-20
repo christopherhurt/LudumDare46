@@ -6,13 +6,13 @@ import java.util.Set;
 public class ParticleSystem {
 
     private static final double LIFESPAN = 2.5;
-    private static final int NUM_PARTICLES = 200;
+    private static final int NUM_PARTICLES = 350;
     private static final double MAX_RADIAL_OFFSET = 0.03;
     private static final double MAX_ANGULAR_OFFSET = Math.toRadians(20.0);
     private static final double MIN_INITIAL_SPEED = 0.015;
     private static final double MAX_INITIAL_SPEED = 0.08;
 
-    private final ParticleTextureAtlas mAtlas;
+    private final ParticleTextureAtlas[] mAtlases;
     private final Entity mTarget;
     private final Set<Particle> mParticles = new HashSet<>(NUM_PARTICLES);
 
@@ -20,16 +20,16 @@ public class ParticleSystem {
     private double mY;
     private double mProgress = 0.0;
 
-    public ParticleSystem(ParticleTextureAtlas pAtlas, Entity pTarget) {
-        this(pAtlas, pTarget.mX.get(), pTarget.mY.get(), pTarget);
+    public ParticleSystem(ParticleTextureAtlas[] pAtlases, Entity pTarget) {
+        this(pAtlases, pTarget.mX.get(), pTarget.mY.get(), pTarget);
     }
 
-    public ParticleSystem(ParticleTextureAtlas pAtlas, double pX, double pY) {
-        this(pAtlas, pX, pY, null);
+    public ParticleSystem(ParticleTextureAtlas[] pAtlases, double pX, double pY) {
+        this(pAtlases, pX, pY, null);
     }
 
-    private ParticleSystem(ParticleTextureAtlas pAtlas, double pX, double pY, Entity pTarget) {
-        mAtlas = pAtlas;
+    private ParticleSystem(ParticleTextureAtlas[] pAtlases, double pX, double pY, Entity pTarget) {
+        mAtlases = pAtlases;
         mTarget = pTarget;
         mX = pX;
         mY = pY;
@@ -54,7 +54,8 @@ public class ParticleSystem {
             double trajectoryX = offsetX * cos - offsetY * sin;
             double trajectoryY = offsetX * sin + offsetY * cos;
 
-            mParticles.add(new Particle(offsetX, offsetY, trajectoryX, trajectoryY, initialSpeed));
+            ParticleTextureAtlas atlas = mAtlases[(int)(Math.random() * mAtlases.length)];
+            mParticles.add(new Particle(offsetX, offsetY, trajectoryX, trajectoryY, initialSpeed, atlas));
         }
     }
 
@@ -74,7 +75,6 @@ public class ParticleSystem {
     }
 
     void prepareAndRender() {
-        mAtlas.loadAndBind();
         ParticleShader.getInstance().loadStageProgress((float)mProgress);
         mParticles.forEach(pParticle -> pParticle.prepareAndRender(mX, mY));
     }

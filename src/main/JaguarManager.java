@@ -7,10 +7,10 @@ import util.Time;
 
 class JaguarManager extends Entity {
 
-    private static final double INITIAL_SPAWN_INTERVAL = 3.0;
+    private static final double INITIAL_SPAWN_INTERVAL = 2.0;
     private static final double SPAWN_INTERVAL_MULTIPLIER = 0.9;
-    private static final double SPAWN_INTERVAL_DECREASE_INTERVAL = 20.0;
-    private static final double SPAWN_OFFSET = 0.1f;
+    private static final double SPAWN_INTERVAL_DECREASE_INTERVAL = 17.5;
+    private static final double SPAWN_OFFSET = 0.25;
 
     private final Hunter mHunter;
 
