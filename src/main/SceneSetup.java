@@ -6,7 +6,7 @@ import util.EntityManager;
 
 public final class SceneSetup {
 
-    private static final Audio MUSIC = AudioFactory.createMusic("res/I said hey.ogg", 0.03f);
+    private static final Audio MUSIC = AudioFactory.createMusic("res/ludum46.ogg", 0.025f);
 
     public static void setup(EntityManager pEntityManager) {
         MUSIC.play();

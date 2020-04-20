@@ -20,7 +20,7 @@ public final class Runner {
         GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GL11.GL_TRUE);
         GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_FALSE);
 
-        long window = GLFW.glfwCreateWindow(WINDOW_SIZE, WINDOW_SIZE, "Epic Game", 0, 0);
+        long window = GLFW.glfwCreateWindow(WINDOW_SIZE, WINDOW_SIZE, "Jungle Jack's Jaguar Jamboree", 0, 0);
         GLFW.glfwMakeContextCurrent(window);
 
         GL.createCapabilities();
